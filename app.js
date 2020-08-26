@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const mongoose= require ('mongoose');
 const sauceRoutes = require('./routes/sauce');
 const userRoutes = require('./routes/user');
-const path = require('path');
+const path = require('path'); //Plugin permettant d'accéder au path du serveur
 
 require('dotenv').config(); //Appel du plugin dotenv permettant de stocker et de gitignorer les variables d'environnement nécessaire à la connexion à la base de données
 
