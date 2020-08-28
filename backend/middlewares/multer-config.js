@@ -11,15 +11,16 @@ const storage = multer.diskStorage({
     callback(null, 'images');
   },
   filename: (req, file, callback) => {
-    const name = file.originalname.split(' ').join('_');  //supprime les espaces du nom du fichier et les remplace par des underscore car les espaces peuvent générer des erreurs côté serveur.
-    const extension = MIME_TYPES[file.mimetype];  // en créer l'extension du fichier en fonction du dictionnaire MIME_TYPES
-    callback(null, name + Date.now() + '.' + extension); //le fichier reçu sera composé de son nom de base sans les espaces, de la date à la milliseconde, suivi d'un point, et de l'extension
+    const name = file.originalname.split(' ').join('_');  //Supprime les espaces du nom du fichier et les remplace par des underscore afin d'éviter les erreurs côté serveur
+    const extension = MIME_TYPES[file.mimetype];  // Crée l'extension du fichier en fonction du dictionnaire MIME_TYPES
+    callback(null, name + Date.now() + '.' + extension); // Le fichier reçu sera composé de son nom de base sans les espaces, de la date à la milliseconde, suivi d'un point, et de l'extension
   }
 });
 
-module.exports = multer({storage}).single('image'); //on précise à multer que les fichiers seront des images
+module.exports = multer({storage}).single('image'); // On précise à multer que les fichiers seront des images
 
 //Dans ce middleware :
+
 /*
 nous créons une constante storage , à passer à multer comme configuration, qui contient la logique nécessaire pour indiquer à multer où enregistrer les fichiers entrants :
 

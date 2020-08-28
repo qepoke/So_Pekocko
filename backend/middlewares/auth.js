@@ -3,12 +3,12 @@ require('dotenv').config();
 
 module.exports = (req, res, next) => {
   try {
-    const token = req.headers.authorization.split(' ')[1]; //Spliter car cette section comporte un 1er mot suivi du token, il faut donc couper en deux et faire un tableau avec la fct splite et ne prendre que le 2ème élèment, le token.
+    const token = req.headers.authorization.split(' ')[1]; // Le token encodé correspond à la 2ème partie de ce header, le split est nécessaire pour le récupérer
     const decodedToken = jwt.verify(token, process.env.TOKEN);
     const userId = decodedToken.userId;
     if (req.body.userId && req.body.userId !== userId) {
       throw 'Invalid user ID';
-    } else {
+    } else {  // Si le user ID de l'utilisateur souhaitant réaliser une requête correspond à celui récupérer dans le TOKEN d'autentification, la requête peut être réalisée.
       next();
     }
   } catch {

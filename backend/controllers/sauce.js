@@ -12,7 +12,7 @@ exports.createSauce = (req, res, next) => {
     });
     sauce.save()
       .then(() => res.status(201).json({ message: 'Sauce enregistrée !'}))
-      .catch(error => res.status(400).json({ message: 'ca marche pas' }));
+      .catch(error => res.status(400).json({ error }));
 };
 
 exports.modifySauce = (req, res, next) => {
@@ -24,29 +24,20 @@ exports.modifySauce = (req, res, next) => {
     Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
       .then(() => res.status(200).json({ message: 'Sauce modifiée !'}))
       .catch(error => res.status(400).json({ error }));
-  };
+};
 
 exports.deleteSauce = (req, res, next) => {
     Sauce.findOne({ _id: req.params.id })
       .then(sauce => {
-        const filename = sauce.imageUrl.split('/images/')[1];
-        fs.unlink(`images/${filename}`, () => {
-          Sauce.deleteOne({ _id: req.params.id })
+        const filename = sauce.imageUrl.split('/images/')[1]; //nous utilisons le fait de savoir que notre URL d'image contient un segment /images/ pour séparer le nom de fichier
+        fs.unlink(`images/${filename}`, () => { //nous utilisons ensuite la fonction unlink du package fs pour supprimer ce fichier, en lui passant le fichier à supprimer et le callback à exécuter une fois ce fichier supprimé
+          Sauce.deleteOne({ _id: req.params.id }) //dans le callback, nous implémentons la logique d'origine, en supprimant la Sauce de la base de données.
             .then(() => res.status(200).json({ message: 'Saucé supprimée !'}))
             .catch(error => res.status(400).json({ error }));
         });
       })
       .catch(error => res.status(500).json({ error }));
 };
-
-/*    nous utilisons l'ID que nous recevons comme paramètre pour accéder au Sauce correspondant dans la base de données ;
-
-    nous utilisons le fait de savoir que notre URL d'image contient un segment /images/ pour séparer le nom de fichier ;
-
-    nous utilisons ensuite la fonction unlink du package fs pour supprimer ce fichier, en lui passant le fichier à supprimer et le callback à exécuter une fois ce fichier supprimé ;
-
-    dans le callback, nous implémentons la logique d'origine, en supprimant la Sauce de la base de données.
-*/
 
 exports.getOneSauce = (req, res, next) => {
     Sauce.findOne({ _id: req.params.id })
@@ -59,10 +50,11 @@ exports.getAllSauces = (req, res, next) => {
       .then(sauces => res.status(200).json(sauces))
       .catch(error => res.status(400).json({ error }));
 };
+
 exports.likeSauce = (req, res, next) => {
     Sauce.findOne({ _id: req.params.id })
       .then(sauce => { 
-        switch (req.body.like) {  // Utilisation du switch pour les 3 cas 
+        switch (req.body.like) {  // Utilisation du switch pour les 3 cas et un pour les erreurs
 
             case 1 : // L'utilisateur like
                 if (!sauce.usersLiked.includes(req.body.userId)) {  // Si le tableau usersLikes pour cette sauce ne contient pas l'Id de l'utilisateur
