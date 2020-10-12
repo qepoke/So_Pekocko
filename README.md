@@ -1,4 +1,7 @@
-## Piquante
+# Formation Développeur Web OPENCLASSROOMS
+
+## So_Pekocko
+Projet n°6 : Construction d'une API sécurisée 
 
 Le projet a été généré avec [Angular CLI](https://github.com/angular/angular-cli) version 7.0.2.
 
